@@ -24,6 +24,14 @@ youtube_url="https://www.youtube.com/watch?v=2TJxpyO3ei4"
 
 os.makedirs("downloaded_video",exist_ok=True)
 
+yt=YouTube(youtube_url)
+
+video= yt.streams.filter(file_extension="mp4").first()
+
+safe_title=yt.title.replace(' ','_')
+filename=f'downloaded_videos/{safe_title}.mp4'
+
+video.download(filename=filename)
 
 
 
