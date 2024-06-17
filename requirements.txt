@@ -1,0 +1,6 @@
+langchain
+langchain_community
+pytube
+langchain_openi
+python-dotenv
+youtube_transcript_api
