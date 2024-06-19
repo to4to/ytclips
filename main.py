@@ -22,7 +22,7 @@ youtube_url="https://www.youtube.com/watch?v=2TJxpyO3ei4"
 
 #download the video
 
-os.makedirs("downloaded_video",exist_ok=True)
+os.makedirs("downloaded_videos",exist_ok=True)
 
 yt=YouTube(youtube_url)
 
