@@ -34,6 +34,17 @@ filename=f'downloaded_videos/{safe_title}.mp4'
 video.download(filename=filename)
 
 
+#get the transcript
+
+video_id=yt.video_id
+transcript=YouTubeTranscriptApi.get_transcript(video_id)
+
+
+#define the llm
+
+llm=ChatOpenAI(model='gpt-4o',temperature=0.7,max_tokens=None,timeout=None,max_retries=2)
+
+
 
 
 
