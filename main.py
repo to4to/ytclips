@@ -39,12 +39,16 @@ video.download(filename=filename)
 video_id=yt.video_id
 transcript=YouTubeTranscriptApi.get_transcript(video_id)
 
-
+print(transcript)
 #define the llm
 
 llm=ChatOpenAI(model='gpt-4o',temperature=0.7,max_tokens=None,timeout=None,max_retries=2)
 
 
+
+#build prompt for llm
+
+prompt=f"Provided to you is a transcript of a video "
 
 
 
