@@ -6,53 +6,63 @@ from langchain_openai import ChatOpenAI
 
 import subprocess
 import json
-
 from typing import List
 
 
-# load the environment variables
-from dotenv import load_dotenv, find_dotenv
+#load Env Variables
+
+from dotenv import load_dotenv,find_dotenv
 load_dotenv(find_dotenv())
 
-youtube_url = "https://www.youtube.com/watch?v=4WO5kJChg3w"
+#load Api Key
 
-os.makedirs("downloaded_videos", exist_ok=True)
+youtube_url="https://www.youtube.com/watch?v=4WO5kJChg3w"
 
-# pytube downlaod video part
 
-yt = YouTube(youtube_url)
-video = yt.streams.filter(file_extension='mp4').first()
-safe_title = yt.title.replace(' ', '_')
-filename = f"downloaded_videos/{safe_title}.mp4"
+
+#download the video
+
+os.makedirs("downloaded_videos",exist_ok=True)
+
+yt=YouTube(youtube_url)
+
+video= yt.streams.filter(file_extension="mp4").first()
+
+safe_title=yt.title.replace(' ','_')
+filename=f'downloaded_videos/{safe_title}.mp4'
 
 video.download(filename=filename)
 
+
 #get the transcript
-video_id = yt.video_id
-transcript = YouTubeTranscriptApi.get_transcript(video_id)
+
+video_id=yt.video_id
+transcript=YouTubeTranscriptApi.get_transcript(video_id)
+
 print(transcript)
-# define the llm
+#define the llm
 
-llm = ChatOpenAI(model='gpt-4o',
-                 temperature=0.7, 
-                 max_tokens=None,
-                 timeout=None,
-                 max_retries=2
-                 )
+llm=ChatOpenAI(model='gpt-4o',temperature=0.7,max_tokens=None,timeout=None,max_retries=2)
 
-# build prompt for LLM
+
+
+#build prompt for llm
+
 prompt = f"""Provided to you is a transcript of a video. 
 Please identify all segments that can be extracted as 
 subtopics from the video based on the transcript.
 Make sure each segment is between 30-500 seconds in duration.
 Make sure you provide extremely accruate timestamps
-and respond only in the format provided. 
+and respond only in the format provided. f
 \n Here is the transcription : \n {transcript}"""
+
 
 messages = [
     {"role": "system", "content": "You are a viral content producer. You are master at reading youtube transcripts and identifying the most intriguing content. You have extraordinary skills to extract subtopic from content. Your subtopics can be repurposed as a separate video."},
     {"role": "user", "content": prompt}
 ]
+
+
 
 class Segment(BaseModel):
     """ Represents a segment of a video"""
@@ -61,6 +71,8 @@ class Segment(BaseModel):
     yt_title: str = Field(..., description="The youtube title to make this segment as a viral sub-topic")
     description: str = Field(..., description="The detailed youtube description to make this segment viral ")
     duration : int = Field(..., description="The duration of the segment in seconds")
+
+
 
 class VideoTranscript(BaseModel):
     """ Represents the transcript of a video with identified viral segments"""
