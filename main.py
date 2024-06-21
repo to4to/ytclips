@@ -74,3 +74,37 @@ class Segment(BaseModel):
 
 
 
+class VideoTranscript(BaseModel):
+    """ Represents the transcript of a video with identified viral segments"""
+    segments: List[Segment] = Field(..., description="List of viral segments in the video")
+
+structured_llm = llm.with_structured_output(VideoTranscript)
+ai_msg = structured_llm.invoke(messages)
+print(ai_msg)
+parsed_content = ai_msg.dict()['segments']
+
+# create a folder to store clips
+os.makedirs("generated_clips", exist_ok=True)
+segment_labels = []
+video_title = safe_title
+
+for i, segment in enumerate(parsed_content):
+    start_time = segment['start_time']
+    end_time = segment['end_time']
+    yt_title = segment['yt_title']
+    description = segment['description']
+    duration = segment['duration']
+
+    output_file = f"generated_clips/{video_title}_{str(i+1)}.mp4"
+    command = f"ffmpeg -i {filename} -ss {start_time} -to {end_time} -c:v libx264 -c:a aac -strict experimental -b:a 192k {output_file}"
+    subprocess.call(command, shell=True)
+    segment_labels.append(f"Sub-Topic {i+1}: {yt_title}, Duration: {duration}s\nDescription: {description}\n")
+
+with open('generated_clips/segment_labels.txt', 'w') as f:
+    for label in segment_labels:
+        f.write(label +"\n")
+
+# save the segments to a json file
+with open('generated_clips/segments.json', 'w') as f:
+    json.dump(parsed_content, f, indent=4)
+    
