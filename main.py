@@ -53,7 +53,7 @@ Please identify all segments that can be extracted as
 subtopics from the video based on the transcript.
 Make sure each segment is between 30-500 seconds in duration.
 Make sure you provide extremely accruate timestamps
-and respond only in the format provided. 
+and respond only in the format provided. f
 \n Here is the transcription : \n {transcript}"""
 
 
@@ -71,4 +71,6 @@ class Segment(BaseModel):
     yt_title: str = Field(..., description="The youtube title to make this segment as a viral sub-topic")
     description: str = Field(..., description="The detailed youtube description to make this segment viral ")
     duration : int = Field(..., description="The duration of the segment in seconds")
+
+
 
